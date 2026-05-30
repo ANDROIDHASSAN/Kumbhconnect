@@ -28,6 +28,15 @@ services:
           property: connectionString
       - key: ADMIN_PASSWORD
         value: kumbh2027 # change this in the Render dashboard after first deploy
+      # CORS: set this to your Vercel frontend URL after deploying it,
+      # e.g. https://kumbhconnect.vercel.app (comma-separate multiple origins).
+      - key: CLIENT_ORIGIN
+        sync: false
+      # Admin account seeded on first boot (used by the email+password login).
+      - key: ADMIN_EMAIL
+        value: demo@gmail.com
+      - key: ADMIN_NAME
+        value: Demo Admin
       # Build-time: the WhatsApp number baked into the client.
       - key: VITE_WHATSAPP_NUMBER
         value: "919999999999"
