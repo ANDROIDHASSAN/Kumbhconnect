@@ -7,6 +7,19 @@ import path from 'node:path';
 // local shims so the components run unchanged under Vite + React Router.
 export default defineConfig({
   plugins: [react()],
+  build: {
+    // Split big libraries into their own cached chunks so no single file is
+    // huge (clears the 500 kB warning) and the browser downloads in parallel.
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'motion-vendor': ['gsap', '@gsap/react', 'lenis'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 700,
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
