@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /emergency
+
+Sitemap: https://kumbhconnect.in/sitemap.xml

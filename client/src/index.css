@@ -1,0 +1,212 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Brand tokens as space-separated RGB channels so Tailwind can apply
+     opacity modifiers (e.g. text-ink/80, bg-saffron/10). Hex equivalents
+     are noted for reference. */
+  --ink: 36 27 46;          /* #241B2E */
+  --muted: 110 101 128;     /* #6E6580 */
+  --cream: 252 248 241;     /* #FCF8F1 */
+  --line: 232 223 207;      /* #E8DFCF */
+  --saffron: 226 112 26;    /* #E2701A */
+  --saffron-dark: 185 83 14;/* #B9530E */
+  --gold: 216 161 43;       /* #D8A12B */
+  --plum: 59 43 87;         /* #3B2B57 */
+  --plum-light: 91 70 132;  /* #5B4684 */
+  --teal: 17 124 115;       /* #117C73 */
+  --rose: 192 67 106;       /* #C0436A */
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-white text-ink font-body antialiased;
+  }
+  h1, h2, h3, h4, h5 {
+    @apply font-heading;
+    color: inherit;
+    text-wrap: balance;
+  }
+  /* Body sets the default ink color; headings inherit it on light sections
+     and inherit white on dark (text-white) sections. */
+  body {
+    color: rgb(var(--ink));
+  }
+  /* Visible focus ring for keyboard users (WCAG 2.1 AA) */
+  :focus-visible {
+    @apply outline-none ring-2 ring-saffron ring-offset-2 ring-offset-white;
+  }
+  ::selection {
+    background: rgb(var(--saffron));
+    color: #fff;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-content px-5 sm:px-6 lg:px-8;
+  }
+  .section {
+    @apply py-14 sm:py-20;
+  }
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-saffron-dark;
+  }
+  .prose-kumbh {
+    @apply text-ink/90 leading-relaxed;
+  }
+  .prose-kumbh h2 {
+    @apply mt-10 mb-3 text-2xl font-extrabold;
+  }
+  .prose-kumbh h3 {
+    @apply mt-6 mb-2 text-lg font-bold;
+  }
+  .prose-kumbh p {
+    @apply mb-4 text-ink/80;
+  }
+  .prose-kumbh ul {
+    @apply mb-4 list-disc space-y-1.5 pl-5 text-ink/80;
+  }
+  .link-underline {
+    @apply underline decoration-line decoration-2 underline-offset-4 hover:decoration-saffron;
+  }
+}
+
+/* Devotional, subtle radial wash for hero / CTA sections */
+.bg-devotional {
+  background:
+    radial-gradient(1200px 480px at 75% -10%, rgba(226, 112, 26, 0.10), transparent 60%),
+    radial-gradient(900px 420px at 0% 110%, rgba(59, 43, 87, 0.10), transparent 55%),
+    rgb(var(--cream));
+}
+
+/* Subtle repeating lotus/diamond motif for textured sections */
+.bg-motif {
+  background-color: rgb(var(--cream));
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='%23e2701a' stroke-opacity='0.10' stroke-width='1'%3E%3Cpath d='M24 8c4 6 10 10 10 16s-6 10-10 16c-4-6-10-10-10-16S20 14 24 8Z'/%3E%3Ccircle cx='24' cy='24' r='2'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 48px 48px;
+}
+
+/* Grain overlay disabled for performance — mix-blend + SVG turbulence forced
+   a full-section repaint on every scroll frame. The class is kept as a no-op
+   so existing markup is unaffected. */
+.grain::after { content: none; }
+
+/* Decorative top-arch (temple shikhara) divider */
+.arch-top {
+  clip-path: path('M0,40 Q50,0 100,40 L100,100 L0,100 Z');
+}
+
+/* ── Motion ───────────────────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes kenburns {
+  from { transform: scale(1.06); }
+  to { transform: scale(1.14); }
+}
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes shimmer {
+  to { background-position: 200% center; }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-kenburns {
+  animation: kenburns 18s ease-out alternate infinite;
+}
+.animate-float {
+  animation: float-y 5s ease-in-out infinite;
+}
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.24s; }
+.delay-4 { animation-delay: 0.32s; }
+.delay-5 { animation-delay: 0.40s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up, .animate-kenburns, .animate-float {
+    animation: none !important;
+  }
+  html { scroll-behavior: auto; }
+}
+
+/* Gold gradient text for accents */
+.text-gradient-gold {
+  background: linear-gradient(100deg, rgb(var(--saffron)) 0%, rgb(var(--gold)) 55%, rgb(var(--saffron-dark)) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── Creative motion utilities ─────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+.marquee-track {
+  animation-name: marquee;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+.marquee:hover .marquee-track { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}
+
+/* Shine sweep on hover (buttons / pills) */
+.shine { position: relative; overflow: hidden; }
+.shine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  transform: skewX(-20deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transition: left 0.6s ease;
+}
+.shine:hover::after { left: 130%; }
+
+/* Animated conic gradient ring for featured cards */
+.ring-aura {
+  position: relative;
+}
+.ring-aura::before {
+  content: '';
+  position: absolute;
+  inset: -1.5px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(from var(--a, 0deg), rgb(var(--saffron)), rgb(var(--gold)), rgb(var(--plum)), rgb(var(--saffron)));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+/* Animate ONLY the hovered card (was running on every card every frame). */
+.ring-aura:hover::before { opacity: 1; animation: spin-aura 6s linear infinite; }
+@keyframes spin-aura { to { --a: 360deg; } }
+@property --a { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+
+/* Underline grow for links */
+.link-grow { background-image: linear-gradient(rgb(var(--saffron)), rgb(var(--saffron))); background-size: 0% 2px; background-position: 0 100%; background-repeat: no-repeat; transition: background-size 0.3s ease; }
+.link-grow:hover { background-size: 100% 2px; }
+
+/* Route entrance transition */
+.route-fade { animation: route-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes route-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .route-fade { animation: none; } }

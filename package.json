@@ -1,0 +1,26 @@
+{
+  "name": "kumbh-connect",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Kumbh Connect — PERN stack (Postgres · Express · React · Node) for Nashik Simhastha Kumbh 2027",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,client -c magenta,cyan \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "npm --workspace server run dev",
+    "dev:client": "npm --workspace client run dev",
+    "build": "npm --workspace client run build",
+    "start": "npm --workspace server run start",
+    "db:migrate": "npm --workspace server run migrate",
+    "db:seed": "npm --workspace server run seed",
+    "setup": "npm install"
+  },
+  "devDependencies": {
+    "concurrently": "9.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

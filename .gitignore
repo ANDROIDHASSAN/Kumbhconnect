@@ -1,0 +1,13 @@
+node_modules
+dist
+build
+.env
+.env.local
+.env*.local
+.data
+*.tsbuildinfo
+.DS_Store
+.vercel
+# local screenshots
+*.jpeg
+.playwright-mcp

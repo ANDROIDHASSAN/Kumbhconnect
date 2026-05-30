@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://kumbhconnect.in/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://kumbhconnect.in/services</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://kumbhconnect.in/services/rooms</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://kumbhconnect.in/services/tents</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://kumbhconnect.in/services/cabs</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://kumbhconnect.in/services/food</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://kumbhconnect.in/services/routes</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://kumbhconnect.in/services/parking</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://kumbhconnect.in/kumbh-guide</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://kumbhconnect.in/how-it-works</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kumbhconnect.in/book</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://kumbhconnect.in/vendors</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://kumbhconnect.in/about</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://kumbhconnect.in/safety</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://kumbhconnect.in/contact</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
+</urlset>

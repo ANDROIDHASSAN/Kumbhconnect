@@ -1,0 +1,339 @@
+{
+  "brand": {
+    "name": "Kumbh Connect",
+    "tagline": "One Trusted Digital Partner for Kumbh Visitors",
+    "event": "Nashik–Trimbakeshwar Simhastha Kumbh Mela 2027"
+  },
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "guide": "Kumbh Guide",
+    "howItWorks": "How it works",
+    "vendors": "For Vendors",
+    "about": "About",
+    "safety": "Safety",
+    "contact": "Contact",
+    "book": "Book now",
+    "emergency": "Emergency"
+  },
+  "common": {
+    "chatOnWhatsapp": "Chat on WhatsApp",
+    "bookNow": "Book now",
+    "getHelp": "Get help",
+    "viewOptions": "View options",
+    "learnMore": "Learn more",
+    "perNight": "per night",
+    "perTrip": "per trip",
+    "perPlate": "per plate",
+    "from": "from",
+    "verified": "Verified",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "loading": "Loading…",
+    "comingSoon": "Coming soon",
+    "phase3": "Available in Phase 3",
+    "callNow": "Call now",
+    "nothingHere": "Nothing here yet",
+    "tryAgain": "Try again",
+    "somethingWrong": "Something went wrong"
+  },
+  "home": {
+    "heroBadge": "Simhastha 2027 · Nashik–Trimbakeshwar",
+    "heroTitle": "Your trusted digital partner for the Kumbh",
+    "heroSubtitle": "Book stays and rides, order sattvic food, find your route, and get emergency help — with real people on WhatsApp at every step.",
+    "heroCta": "Plan my trip",
+    "heroWhatsapp": "Ask on WhatsApp",
+    "servicesTitle": "Everything you need, in one place",
+    "servicesSubtitle": "Seven services, one trusted partner.",
+    "trustTitle": "Why pilgrims trust us",
+    "trust": {
+      "verified": "Verified vendors",
+      "verifiedDesc": "Every stay, tent and cab is KYC-checked.",
+      "secure": "Secure UPI payments",
+      "secureDesc": "Pay a small advance; balance on arrival.",
+      "live": "Live human help",
+      "liveDesc": "Real support on WhatsApp, every step.",
+      "experience": "2015 experience",
+      "experienceDesc": "Built by people who served the last Kumbh.",
+      "ratings": "Honest ratings",
+      "ratingsDesc": "Transparent reviews, no fake listings."
+    },
+    "howTitle": "How it works",
+    "how": {
+      "step1": "Tell us what you need",
+      "step1Desc": "Pick a service and share dates, party size and area — on the site or WhatsApp.",
+      "step2": "See vetted, priced options",
+      "step2Desc": "We show verified vendors with clear, all-in pricing.",
+      "step3": "Confirm and relax",
+      "step3Desc": "Pay a small advance, get a WhatsApp voucher, and reach a human anytime."
+    },
+    "testimonialsTitle": "Trusted by families like yours",
+    "faqTitle": "Frequently asked questions",
+    "ctaTitle": "Ready to plan a peaceful Kumbh?",
+    "ctaSubtitle": "Start a chat now — our team replies fast in English, हिंदी and मराठी.",
+    "stats": {
+      "visitors": "10–12 crore",
+      "visitorsLabel": "expected visitors",
+      "vendors": "Verified",
+      "vendorsLabel": "vendor network",
+      "languages": "3 languages",
+      "languagesLabel": "EN · HI · MR",
+      "support": "Live",
+      "supportLabel": "WhatsApp help"
+    }
+  },
+  "services": {
+    "title": "Our services",
+    "subtitle": "Pick what you need. Everything is verified, priced clearly, and backed by live help.",
+    "whatsIncluded": "What's included",
+    "pricing": "Indicative pricing",
+    "sampleOptions": "Sample options",
+    "rooms": {
+      "name": "Room booking",
+      "short": "Hotels, lodges & homestays near the ghats.",
+      "long": "Comfortable, verified stays close to the snan ghats and Trimbakeshwar temple — for couples, families and elderly travellers.",
+      "priceRange": "₹1,200–₹6,000 per night",
+      "included": ["KYC-verified property", "Clean rooms & linen", "Walking/short ride to ghat", "Free cancellation window", "Human help till checkout"]
+    },
+    "tents": {
+      "name": "Tent booking",
+      "short": "Sadhugram & private tent-city stays.",
+      "long": "Stay close to the action in managed tent cities — from basic dormitory tents to private deluxe tents with attached facilities.",
+      "priceRange": "₹900–₹4,500 per night",
+      "included": ["Managed, secure tent city", "Bedding & basic furniture", "Shared/attached washrooms", "On-site help desk", "Power & lighting"]
+    },
+    "cabs": {
+      "name": "Cab & auto booking",
+      "short": "Rides to ghats, stations & parking.",
+      "long": "Reliable cabs and autos for airport/station pickups, ghat drops and outer-parking shuttles — with fixed, fair fares.",
+      "priceRange": "₹150–₹2,500 per trip",
+      "included": ["Verified drivers", "Fixed transparent fares", "Station & airport pickup", "Senior-friendly vehicles", "Live trip support"]
+    },
+    "food": {
+      "name": "Food delivery",
+      "short": "Sattvic meals, thalis & prasad packs.",
+      "long": "Hygienic sattvic thalis, regional meals and prasad packs delivered to your stay or pickup point.",
+      "priceRange": "₹80–₹350 per plate",
+      "included": ["Hygienic sattvic kitchens", "Veg thalis & regional meals", "Prasad packs", "Bulk/group orders", "Delivery to stay"]
+    },
+    "routes": {
+      "name": "Route guidance",
+      "short": "Snan-day routing, ghat maps & closures.",
+      "long": "Live routing for snan days — ghat maps, road closures, e-shuttle points and the safest way to reach the river.",
+      "priceRange": "Free",
+      "included": ["Snan-day route maps", "Live road closures", "E-shuttle pick-up points", "Crowd & timing tips", "Offline-friendly maps"]
+    },
+    "emergency": {
+      "name": "Emergency help",
+      "short": "One-tap medical, police & lost-and-found.",
+      "long": "One tap to the nearest medical, police or lost-and-found desk — with your location shared automatically and a human on the line.",
+      "priceRange": "Free",
+      "included": ["Nearest medical desk", "Police & help points", "Lost-and-found", "Auto-shared GPS location", "One-tap call + live agent"]
+    },
+    "parking": {
+      "name": "Parking information",
+      "short": "Outer-parking availability & shuttles.",
+      "long": "Real-time outer-parking availability and shuttle timings, so you park once and ride in stress-free.",
+      "priceRange": "₹50–₹500 per day",
+      "included": ["Outer-parking zones", "Live availability", "Shuttle timings", "Safe overnight parking", "Directions from highway"]
+    }
+  },
+  "guide": {
+    "title": "Nashik Kumbh 2027 — complete visitor guide",
+    "subtitle": "Snan dates, ghat maps, packing list, transport, do's & don'ts and safety — everything you need for a peaceful pilgrimage.",
+    "snanTitle": "Shahi Snan (royal bath) dates",
+    "snanNote": "Dates are indicative and will be confirmed by the administration. We update this page as official dates are announced.",
+    "ghatsTitle": "Main ghats & temples",
+    "packingTitle": "Packing checklist",
+    "transportTitle": "Getting there & around",
+    "dosTitle": "Do's & don'ts",
+    "dos": "Do's",
+    "donts": "Don'ts",
+    "safetyTitle": "Safety & emergencies",
+    "faqTitle": "Guide FAQs",
+    "lastUpdated": "Last updated"
+  },
+  "book": {
+    "title": "Book a service",
+    "subtitle": "A few quick details and we'll line up verified options. You can finish on WhatsApp anytime.",
+    "step1": "What do you need?",
+    "step2": "Your details",
+    "step3": "Confirm & connect",
+    "pickService": "Choose a service",
+    "dates": "Dates",
+    "checkIn": "Check-in / date",
+    "checkOut": "Check-out (optional)",
+    "partySize": "Party size",
+    "area": "Preferred area",
+    "areaPlaceholder": "e.g. near Ramkund, Trimbakeshwar",
+    "name": "Your name",
+    "phone": "Phone (WhatsApp)",
+    "language": "Preferred language",
+    "notes": "Anything else?",
+    "notesPlaceholder": "Elderly travellers, dietary needs, budget…",
+    "review": "Review your request",
+    "sendWhatsapp": "Send on WhatsApp",
+    "payAdvance": "Pay advance to confirm",
+    "leadSaved": "Got it! We've saved your request.",
+    "leadSavedDesc": "Tap below to continue on WhatsApp — our team will share vetted options shortly.",
+    "advanceNote": "Pay a small advance to lock your booking. Balance is due on arrival.",
+    "paymentStubbed": "Payments are in test mode. In production this opens secure Razorpay/UPI checkout.",
+    "errors": {
+      "service": "Please choose a service.",
+      "name": "Please enter your name.",
+      "phone": "Please enter a valid 10-digit phone number.",
+      "date": "Please choose a date."
+    }
+  },
+  "vendors": {
+    "title": "Partner with Kumbh Connect",
+    "subtitle": "Reach lakhs of pilgrims. We bring you verified bookings; you focus on great service.",
+    "valueTitle": "Why partner with us",
+    "value": {
+      "demand": "Steady demand",
+      "demandDesc": "We channel high-intent pilgrims straight to your inventory.",
+      "payments": "Reliable payouts",
+      "paymentsDesc": "Transparent commissions and weekly settlement records.",
+      "support": "Shared support",
+      "supportDesc": "Our WhatsApp team handles first-line customer questions."
+    },
+    "commissionTitle": "Commission terms",
+    "commission": {
+      "rooms": "Rooms & tents: 10–15%",
+      "cabs": "Cabs & autos: 12–18%",
+      "food": "Food: 15–20% margin",
+      "promos": "Featured promotions: flat fee"
+    },
+    "formTitle": "Vendor signup",
+    "businessName": "Business name",
+    "vendorType": "What do you offer?",
+    "contactName": "Contact person",
+    "phone": "Phone",
+    "areaLabel": "Area / locality",
+    "capacity": "Capacity (rooms/seats/plates per day)",
+    "kycNote": "After signup, our team verifies your KYC documents before you go live.",
+    "submitted": "Thanks! Our partnerships team will reach out within 48 hours."
+  },
+  "emergency": {
+    "title": "Emergency help",
+    "subtitle": "Pick what you need. We'll share your location and connect you to the nearest desk and a live agent.",
+    "shareLocation": "Share my location",
+    "locating": "Finding your location…",
+    "located": "Location ready",
+    "locationError": "Couldn't get your location. You can still call directly.",
+    "categories": {
+      "medical": "Medical",
+      "medicalDesc": "Nearest medical desk / ambulance",
+      "police": "Police / safety",
+      "policeDesc": "Nearest police help point",
+      "lost": "Lost & found",
+      "lostDesc": "Lost person or belongings"
+    },
+    "nearest": "Nearest help desk",
+    "callDesk": "Call help desk",
+    "callHelpline": "Call Kumbh helpline (112)",
+    "whatsappAgent": "Message a live agent",
+    "disclaimer": "In a life-threatening emergency, call 112 immediately."
+  },
+  "admin": {
+    "title": "Admin dashboard",
+    "login": "Admin login",
+    "email": "Email",
+    "password": "Password",
+    "enter": "Enter",
+    "wrongPassword": "Wrong password.",
+    "wrongCreds": "Invalid email or password.",
+    "demoCreds": "Demo credentials",
+    "useDemo": "Use these",
+    "logout": "Log out",
+    "subtitle": "Live operations — leads, vendors, support and revenue at a glance.",
+    "loadError": "Couldn't load the dashboard. Check the API and try again.",
+    "persistNote": "Saved locally to .data/store.json — data persists across restarts. Connect Supabase for production.",
+    "signedInAs": "Signed in as",
+    "you": "You",
+    "active": "Active",
+    "disabled": "Disabled",
+    "adminsHint": "People who can sign in to this dashboard.",
+    "noAdmins": "No admins yet.",
+    "pwHint": "At least 6 characters.",
+    "nav": {
+      "overview": "Overview",
+      "leads": "Leads & bookings",
+      "vendors": "Vendors",
+      "tickets": "Support tickets",
+      "admins": "Admins"
+    },
+    "search": {
+      "leads": "Search name, phone, service…",
+      "vendors": "Search vendor, area, type…",
+      "tickets": "Search category, notes…"
+    },
+    "added": {
+      "leads": "Booking added",
+      "vendors": "Vendor added",
+      "tickets": "Ticket created",
+      "admins": "Admin added"
+    },
+    "updated": "Saved",
+    "deleted": "Deleted",
+    "actionFailed": "Something went wrong. Please try again.",
+    "noMatch": "No rows match your filters.",
+    "add": {
+      "leads": "Add booking",
+      "vendors": "Add vendor",
+      "tickets": "Add ticket",
+      "admins": "Add admin"
+    },
+    "tabs": {
+      "leads": "Leads & bookings",
+      "vendors": "Vendors",
+      "tickets": "Support tickets"
+    },
+    "noLeads": "No leads yet. They'll appear here as visitors submit the booking form.",
+    "noVendors": "No vendors yet.",
+    "noTickets": "No support tickets.",
+    "cols": {
+      "name": "Name",
+      "phone": "Phone",
+      "service": "Service",
+      "date": "Date",
+      "party": "Party",
+      "area": "Area",
+      "status": "Status",
+      "amount": "Amount",
+      "channel": "Channel",
+      "created": "Created",
+      "type": "Type",
+      "kyc": "KYC",
+      "rating": "Rating",
+      "category": "Category",
+      "email": "Email",
+      "role": "Role",
+      "lastLogin": "Last login"
+    }
+  },
+  "footer": {
+    "tagline": "Helping pilgrims experience the Kumbh with calm and confidence.",
+    "services": "Services",
+    "company": "Company",
+    "support": "Support",
+    "legal": "Legal",
+    "privacy": "Privacy",
+    "refunds": "Refund policy",
+    "terms": "Terms",
+    "rights": "All rights reserved.",
+    "madeWith": "Built for pilgrims of Simhastha 2027."
+  },
+  "consent": {
+    "message": "We use cookies for analytics to improve your experience. You choose.",
+    "accept": "Accept",
+    "decline": "Decline"
+  },
+  "lang": {
+    "label": "Language",
+    "en": "English",
+    "hi": "हिंदी",
+    "mr": "मराठी"
+  }
+}

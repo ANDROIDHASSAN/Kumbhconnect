@@ -1,0 +1,49 @@
+# Render Blueprint — one web service (Express serves the React build + API)
+# plus a free managed Postgres. Push to GitHub, then in Render:
+# New → Blueprint → pick this repo. Everything below is provisioned automatically.
+# The server auto-creates the schema and seeds sample data on first boot.
+
+databases:
+  - name: kumbh-db
+    plan: free
+    databaseName: kumbh_connect
+    user: kumbh
+
+services:
+  - type: web
+    name: kumbh-connect
+    runtime: node
+    plan: free
+    # --include=dev so Vite (a devDependency) is available to build the client.
+    buildCommand: npm install --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: kumbh-db
+          property: connectionString
+      - key: ADMIN_PASSWORD
+        value: kumbh2027 # change this in the Render dashboard after first deploy
+      # Build-time: the WhatsApp number baked into the client.
+      - key: VITE_WHATSAPP_NUMBER
+        value: "919999999999"
+      # Optional integrations — leave blank to keep them gracefully stubbed:
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: WHATSAPP_API_TOKEN
+        sync: false
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      # Cloudinary image uploads — leave blank to fall back to pasting URLs.
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
