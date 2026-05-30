@@ -119,29 +119,41 @@ Set these in `server/.env` (server) or `client/.env` (client) to go live:
 `DATABASE_URL`, `RAZORPAY_KEY_ID/SECRET`, `RAZORPAY_WEBHOOK_SECRET`,
 `WHATSAPP_API_TOKEN/PHONE_NUMBER_ID`, `VITE_WHATSAPP_NUMBER`, `VITE_API_URL`.
 
-## ☁️ Deploy to Render (one click)
+## ☁️ Deploy — Backend on Render, Frontend on Vercel
 
-This repo ships a **`render.yaml` Blueprint**. The whole app runs as **one web service** —
-Express serves the built React app *and* the API from a single URL (no CORS, no separate static
-site) — plus a **free managed Postgres**.
+The app splits cleanly: **Render** runs the Express API + managed Postgres; **Vercel** serves the
+React SPA and proxies `/api/*` to Render (so the browser stays same-origin — no CORS).
 
+### 1) Backend → Render (`render.yaml` Blueprint)
 1. Push this repo to GitHub.
-2. In Render: **New → Blueprint → pick the repo → Apply.**
-3. Render provisions Postgres, builds the client, and starts the server. On first boot the
-   server **auto-creates the schema and seeds sample vendors** (`server/src/db.js`). No manual
-   migrate/seed step.
-4. Open the service URL. Admin: `/admin` (change `ADMIN_PASSWORD` in the dashboard).
+2. Render → **New → Blueprint → pick the repo → Apply.** It provisions a free Postgres + the
+   API web service. On first boot the server **auto-creates the schema and seeds sample vendors**
+   (no manual migrate/seed).
+3. Copy the live service URL, e.g. `https://kumbh-connect.onrender.com`.
+4. In the Render dashboard set `CLIENT_ORIGIN` to your Vercel URL, and change `ADMIN_PASSWORD`.
+   (Cloudinary/Razorpay/WhatsApp keys are optional — blank = gracefully stubbed.)
 
-What the Blueprint sets:
-- `buildCommand: npm install --include=dev && npm run build` (builds `client/dist`)
-- `startCommand: npm start` (Express serves `client/dist` + `/api`)
-- `DATABASE_URL` wired from the managed Postgres → app uses Postgres automatically (SSL handled)
-- `healthCheckPath: /api/health`
+Health check: `GET /api/health`. The Blueprint runs `npm install` then `npm start` (API only).
 
-> Single-service model verified locally: `npm run build` then `npm start` serves the SPA at `/`,
-> SPA routes fall back to `index.html`, and `/api/*` hits Express on the same origin.
+### 2) Frontend → Vercel (`vercel.json`)
+1. **Edit `vercel.json`** → replace the rewrite host with your real Render URL from step 3:
+   ```json
+   { "source": "/api/:path*", "destination": "https://YOUR-SERVICE.onrender.com/api/:path*" }
+   ```
+2. Vercel → **New Project → import the repo.** It picks up `vercel.json` automatically
+   (`npm run build` → `client/dist`).
+3. Set Vercel env vars (Project → Settings → Environment Variables):
+   - `VITE_WHATSAPP_NUMBER` = your WhatsApp number (e.g. `9199…`)
+   - `VITE_SITE_URL` = your Vercel domain (for canonical/OG tags)
+   - *(do not set `VITE_API_URL` — `/api` is proxied to Render by `vercel.json`)*
+4. Deploy. Open the Vercel URL; `/admin` logs into the Render API through the proxy.
 
-Other hosts (Railway/Fly/VM) work the same way: `npm install --include=dev && npm run build`,
-then `npm start`, with `DATABASE_URL` set to a Postgres instance.
+> **One required edit:** the Render host in `vercel.json` (Render only knows its URL after the
+> backend deploys). Everything else is automatic.
+
+### Single-service alternative
+Prefer one service? You can still run everything on Render alone — set the build to
+`npm install --include=dev && npm run build` and `NODE_ENV=production`; Express then serves
+`client/dist` + `/api` from one URL. (Verified locally.)
 
 > See `CONTEXT.md` for the full product spec.

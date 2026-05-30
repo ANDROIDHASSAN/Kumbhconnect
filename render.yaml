@@ -1,7 +1,11 @@
-# Render Blueprint — one web service (Express serves the React build + API)
-# plus a free managed Postgres. Push to GitHub, then in Render:
-# New → Blueprint → pick this repo. Everything below is provisioned automatically.
-# The server auto-creates the schema and seeds sample data on first boot.
+# Render Blueprint — BACKEND ONLY (Express API + managed Postgres).
+# The React frontend deploys separately on Vercel (see vercel.json), which
+# proxies /api/* to this service. The server auto-creates the schema and
+# seeds sample data on first boot.
+#
+# Deploy: push to GitHub → Render → New → Blueprint → pick this repo → Apply.
+# After it's live, copy the service URL (https://kumbh-connect.onrender.com)
+# into vercel.json's rewrite destination.
 
 databases:
   - name: kumbh-db
@@ -14,8 +18,8 @@ services:
     name: kumbh-connect
     runtime: node
     plan: free
-    # --include=dev so Vite (a devDependency) is available to build the client.
-    buildCommand: npm install --include=dev && npm run build
+    # API only — no client build here (the SPA is built & served by Vercel).
+    buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /api/health
     autoDeploy: true
@@ -26,21 +30,17 @@ services:
         fromDatabase:
           name: kumbh-db
           property: connectionString
-      - key: ADMIN_PASSWORD
-        value: kumbh2027 # change this in the Render dashboard after first deploy
-      # CORS: set this to your Vercel frontend URL after deploying it,
-      # e.g. https://kumbhconnect.vercel.app (comma-separate multiple origins).
+      # CORS allow-list — set to your Vercel URL (e.g. https://kumbhconnect.vercel.app).
+      # Optional when Vercel proxies /api server-side, but good to set.
       - key: CLIENT_ORIGIN
         sync: false
-      # Admin account seeded on first boot (used by the email+password login).
       - key: ADMIN_EMAIL
         value: demo@gmail.com
       - key: ADMIN_NAME
         value: Demo Admin
-      # Build-time: the WhatsApp number baked into the client.
-      - key: VITE_WHATSAPP_NUMBER
-        value: "919999999999"
-      # Optional integrations — leave blank to keep them gracefully stubbed:
+      - key: ADMIN_PASSWORD
+        value: kumbh2027 # change in the Render dashboard after first deploy
+      # Optional integrations — blank = gracefully stubbed:
       - key: RAZORPAY_KEY_ID
         sync: false
       - key: RAZORPAY_KEY_SECRET
@@ -49,7 +49,6 @@ services:
         sync: false
       - key: WHATSAPP_PHONE_NUMBER_ID
         sync: false
-      # Cloudinary image uploads — leave blank to fall back to pasting URLs.
       - key: CLOUDINARY_CLOUD_NAME
         sync: false
       - key: CLOUDINARY_API_KEY

@@ -39,6 +39,10 @@ function adminHeader(): Record<string, string> {
 export const getServiceVendors = (slug: ServiceType) =>
   req<{ vendors: Vendor[] }>(`/services/${slug}/vendors`).then((r) => r.vendors);
 
+export type VendorWithInventory = Vendor & { inventory?: Array<{ id: string; date: string; price: number; units_available: number }> };
+export const getVendor = (id: string) =>
+  req<{ vendor: VendorWithInventory }>(`/vendors/${id}`).then((r) => r.vendor);
+
 export const getEmergencyDesks = () =>
   req<{ desks: any[] }>(`/emergency/desks`).then((r) => r.desks);
 
@@ -80,13 +84,24 @@ type UploadSig = { cloudName: string; apiKey: string; timestamp: number; folder:
 export const adminSignUpload = () => req<UploadSig>(`/admin/uploads/sign`, { method: 'POST' });
 
 /**
- * Upload an image straight to Cloudinary using a server-minted signature, and
- * return the hosted secure_url. Throws an ApiError with a friendly message when
- * uploads aren't configured (the caller can then fall back to a URL field).
- * Note: uses raw fetch — our admin bearer token must NOT be sent to Cloudinary.
+ * Upload an image and return a URL to store on the vendor.
+ *
+ * Preferred path: signed direct upload to Cloudinary (when CLOUDINARY_* keys are
+ * set on the server) — returns a hosted secure_url. Our admin bearer token must
+ * NOT be sent to Cloudinary, so the upload itself uses raw fetch.
+ *
+ * Fallback path: when Cloudinary isn't configured (the sign endpoint 503s), the
+ * image is downscaled in-browser and returned as a compact data URL, so uploads
+ * work end-to-end with zero external setup (great for local/demo). Switching to
+ * real Cloudinary later needs no code change — just add the env keys.
  */
 export async function adminUploadImage(file: File): Promise<string> {
-  const sig = await adminSignUpload();
+  let sig: UploadSig;
+  try {
+    sig = await adminSignUpload();
+  } catch {
+    return fileToDataUrl(file); // Cloudinary not configured — encode locally.
+  }
   const fd = new FormData();
   fd.append('file', file);
   fd.append('api_key', sig.apiKey);
@@ -100,6 +115,38 @@ export async function adminUploadImage(file: File): Promise<string> {
   }
   const data = await res.json();
   return data.secure_url as string;
+}
+
+/**
+ * Downscale an image client-side (canvas) and return a JPEG data URL. Keeps the
+ * payload small (well under the server's body limit) so it can be stored as the
+ * vendor image_url without a CDN. Falls back to the raw file if canvas is unusable.
+ */
+async function fileToDataUrl(file: File, maxDim = 1280, quality = 0.82): Promise<string> {
+  const readRaw = () =>
+    new Promise<string>((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result as string);
+      r.onerror = () => reject(new Error('Could not read the image file.'));
+      r.readAsDataURL(file);
+    });
+
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, maxDim / Math.max(bitmap.width, bitmap.height));
+    const w = Math.round(bitmap.width * scale);
+    const h = Math.round(bitmap.height * scale);
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return readRaw();
+    ctx.drawImage(bitmap, 0, 0, w, h);
+    bitmap.close?.();
+    return canvas.toDataURL('image/jpeg', quality);
+  } catch {
+    return readRaw();
+  }
 }
 
 export const adminAddVendor = (v: Record<string, unknown>) => req(`/admin/vendors`, { method: 'POST', body: JSON.stringify(v) });

@@ -46,6 +46,29 @@
   }
 }
 
+/* ── Lenis smooth scroll ───────────────────────────────────────────
+   Required base styles for lenis. The `.lenis-smooth` rule forces
+   scroll-behavior:auto WHILE lenis is driving the scroll — without it the
+   native `scroll-behavior: smooth` above fights lenis's per-frame scrollTop
+   updates and the motion feels laggy/robotic. When lenis is off (reduced
+   motion), the html rule above still gives a smooth-scroll fallback. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
 @layer components {
   .container-page {
     @apply mx-auto w-full max-w-content px-5 sm:px-6 lg:px-8;
@@ -210,3 +233,50 @@
 .route-fade { animation: route-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
 @keyframes route-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .route-fade { animation: none; } }
+
+/* ── Scroll reveal (IntersectionObserver-driven, fail-safe) ───────────
+   These NEVER leave content hidden — JS toggles `.is-in`, and the React
+   hook has a fail-safe timeout that forces it on. */
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--rv-y, 28px));
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--rv-delay, 0s),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--rv-delay, 0s);
+}
+.reveal.is-in { opacity: 1; transform: none; }
+
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(var(--rv-y, 28px));
+  transition:
+    opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-stagger.is-in > * { opacity: 1; transform: none; }
+.reveal-stagger.is-in > *:nth-child(1) { transition-delay: 0.04s; }
+.reveal-stagger.is-in > *:nth-child(2) { transition-delay: 0.10s; }
+.reveal-stagger.is-in > *:nth-child(3) { transition-delay: 0.16s; }
+.reveal-stagger.is-in > *:nth-child(4) { transition-delay: 0.22s; }
+.reveal-stagger.is-in > *:nth-child(5) { transition-delay: 0.28s; }
+.reveal-stagger.is-in > *:nth-child(6) { transition-delay: 0.34s; }
+.reveal-stagger.is-in > *:nth-child(7) { transition-delay: 0.40s; }
+.reveal-stagger.is-in > *:nth-child(n+8) { transition-delay: 0.46s; }
+
+/* Split-heading word mask reveal */
+.split-word { display: inline-block; overflow: hidden; vertical-align: bottom; }
+.split-word > span {
+  display: inline-block;
+  transform: translateY(110%);
+  opacity: 0;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease;
+}
+.split.is-in .split-word > span { transform: none; opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-stagger > *, .split-word > span {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

@@ -16,6 +16,15 @@ router.get('/services/:slug/vendors', async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
+// A single vendor profile (with inventory) for the vendor detail page
+router.get('/vendors/:id', async (req, res, next) => {
+  try {
+    const vendor = await data.getVendorById(req.params.id);
+    if (!vendor) return res.status(404).json({ error: 'Vendor not found' });
+    res.json({ vendor });
+  } catch (e) { next(e); }
+});
+
 // Emergency help desks (static reference data)
 router.get('/emergency/desks', (_req, res) => res.json({ desks: HELP_DESKS }));
 
@@ -36,6 +45,8 @@ router.post('/leads', async (req, res, next) => {
       area: b.area || undefined,
       notes: b.notes || undefined,
       channel: b.channel || 'web',
+      vendor_id: b.vendor_id || undefined,
+      vendor_name: b.vendor_name || undefined,
     });
     res.status(201).json({ ok: true, booking });
   } catch (e) { next(e); }

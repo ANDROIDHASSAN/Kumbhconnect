@@ -10,6 +10,7 @@ import { useSmooth } from '@/lib/smooth';
 import { Home } from '@/pages/Home';
 import { Services } from '@/pages/Services';
 import { ServiceDetail } from '@/pages/ServiceDetail';
+import { VendorDetail } from '@/pages/VendorDetail';
 import { Guide } from '@/pages/Guide';
 import { HowItWorks } from '@/pages/HowItWorks';
 import { Book } from '@/pages/Book';
@@ -48,6 +49,7 @@ export function App() {
             <Route path="/" element={<Home />} />
             <Route path="/services" element={<Services />} />
             <Route path="/services/:slug" element={<ServiceDetail />} />
+            <Route path="/vendor/:id" element={<VendorDetail />} />
             <Route path="/kumbh-guide" element={<Guide />} />
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/book" element={<Book />} />

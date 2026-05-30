@@ -104,6 +104,20 @@ export async function getInventoryForVendor(vendorId) {
   return getDB().inventory.filter((i) => i.vendor_id === vendorId && i.units_available > 0);
 }
 
+/** A single vendor by id (with its upcoming inventory), for the vendor profile page. */
+export async function getVendorById(id) {
+  let vendor = null;
+  if (isPg()) {
+    const { rows } = await q('select * from vendors where id=$1', [id]);
+    vendor = rows[0] || null;
+  } else {
+    vendor = getDB().vendors.find((v) => v.id === id) || null;
+  }
+  if (!vendor) return null;
+  const inventory = await getInventoryForVendor(id);
+  return { ...vendor, inventory };
+}
+
 // ── Bookings / leads ──────────────────────────────────────────
 
 export async function createLead(input) {
@@ -115,14 +129,14 @@ export async function createLead(input) {
       [input.name, input.phone, input.language ?? 'en', input.party_size ?? null],
     );
     const { rows } = await q(
-      `insert into bookings (customer_id,service_type,status,start_date,end_date,party_size,amount,commission,channel,notes)
-       values ($1,$2,'lead',$3,$4,$5,$6,$7,$8,$9) returning *`,
-      [cust.rows[0].id, input.service_type, input.start_date ?? null, input.end_date ?? null, input.party_size ?? null, amount || null, commission || null, input.channel ?? 'web', input.notes ?? null],
+      `insert into bookings (customer_id,vendor_id,service_type,status,start_date,end_date,party_size,amount,commission,channel,notes)
+       values ($1,$2,$3,'lead',$4,$5,$6,$7,$8,$9,$10) returning *`,
+      [cust.rows[0].id, input.vendor_id ?? null, input.service_type, input.start_date ?? null, input.end_date ?? null, input.party_size ?? null, amount || null, commission || null, input.channel ?? 'web', input.notes ?? null],
     );
-    return { ...rows[0], customer_name: input.name, customer_phone: input.phone, area: input.area };
+    return { ...rows[0], customer_name: input.name, customer_phone: input.phone, area: input.area, vendor_name: input.vendor_name ?? null };
   }
   return mutate((db) => {
-    const b = { id: nextId('bk', db), customer_id: null, vendor_id: null, service_type: input.service_type, status: 'lead', start_date: input.start_date ?? null, end_date: input.end_date ?? null, party_size: input.party_size ?? null, amount: amount || null, commission: commission || null, channel: input.channel ?? 'web', notes: input.notes ?? null, created_at: now(), customer_name: input.name, customer_phone: input.phone, area: input.area };
+    const b = { id: nextId('bk', db), customer_id: null, vendor_id: input.vendor_id ?? null, service_type: input.service_type, status: 'lead', start_date: input.start_date ?? null, end_date: input.end_date ?? null, party_size: input.party_size ?? null, amount: amount || null, commission: commission || null, channel: input.channel ?? 'web', notes: input.notes ?? null, created_at: now(), customer_name: input.name, customer_phone: input.phone, area: input.area, vendor_name: input.vendor_name ?? null };
     db.bookings.unshift(b);
     return b;
   });

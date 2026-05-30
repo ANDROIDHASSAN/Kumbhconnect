@@ -18,7 +18,9 @@ export function createApp() {
 
   app.use(cors({ origin: (process.env.CLIENT_ORIGIN || 'http://localhost:5173').split(','), credentials: true }));
   // Capture the raw body so the Razorpay webhook can verify its signature.
-  app.use(express.json({ limit: '1mb', verify: (req, _res, buf) => { req.rawBody = buf; } }));
+  // 5mb headroom: when Cloudinary isn't configured, vendor images are sent
+  // inline as (downscaled) data URLs in the create/patch payload.
+  app.use(express.json({ limit: '5mb', verify: (req, _res, buf) => { req.rawBody = buf; } }));
 
   app.get('/api/health', async (_req, res) => {
     const db = await pingDb();

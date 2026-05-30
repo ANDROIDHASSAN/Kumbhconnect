@@ -33,6 +33,8 @@ export function BookingForm() {
   const locale = useLocale();
   const search = useSearchParams();
   const preset = search.get('service');
+  const presetVendorId = search.get('vendor');
+  const presetVendorName = search.get('vendorName');
 
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormState>({
@@ -73,11 +75,11 @@ export function BookingForm() {
     return Object.keys(e).length === 0;
   }
 
-  // When more than one service is picked, prepend the full list to the notes
-  // so the backend lead (single service_type column) still captures the intent.
-  const notesForLead = form.services.length > 1
-    ? `Services requested: ${serviceNames}.${form.notes ? `\n${form.notes}` : ''}`
-    : form.notes || undefined;
+  // Compose the lead notes: preferred vendor (if booking a specific one) +
+  // the full service list (when multiple) + the visitor's own notes.
+  const vendorNote = presetVendorName ? `Preferred vendor: ${presetVendorName}.` : '';
+  const multiNote = form.services.length > 1 ? `Services requested: ${serviceNames}.` : '';
+  const notesForLead = [vendorNote, multiNote, form.notes].filter(Boolean).join('\n') || undefined;
 
   async function submitLead() {
     if (!validateStep2()) return;
@@ -97,6 +99,8 @@ export function BookingForm() {
           area: form.area || undefined,
           notes: notesForLead,
           channel: 'web',
+          vendor_id: presetVendorId || undefined,
+          vendor_name: presetVendorName || undefined,
         }),
       });
       const data = await res.json();
@@ -137,12 +141,23 @@ export function BookingForm() {
       notes: form.notes || undefined,
     },
     form.services.length
-      ? `Namaste! I'd like help with ${serviceNames} for the Nashik Kumbh 2027.`
+      ? `Namaste! I'd like to book ${presetVendorName ? `${presetVendorName} for ` : ''}${serviceNames} for the Nashik Kumbh 2027.`
       : undefined,
   );
 
   return (
     <div className="mx-auto max-w-2xl">
+      {/* Booking-with-a-specific-vendor banner */}
+      {presetVendorName && (
+        <div className="mb-6 flex items-center gap-3 rounded-card border border-saffron/30 bg-saffron/5 p-4">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-saffron/15 text-lg" aria-hidden>🏠</span>
+          <div className="flex-1">
+            <p className="text-sm font-bold text-ink">Booking with {presetVendorName}</p>
+            <p className="text-xs text-muted">We'll match you with this verified partner. Just add your details.</p>
+          </div>
+        </div>
+      )}
+
       {/* Stepper */}
       <ol className="mb-8 flex items-center gap-2">
         {STEPS.map((s, i) => (
@@ -263,6 +278,7 @@ export function BookingForm() {
           <div className="rounded-xl border border-line p-4 text-sm">
             <p className="mb-2 font-semibold text-ink">{t('review')}</p>
             <dl className="grid grid-cols-2 gap-y-1.5 text-muted">
+              {presetVendorName && (<><dt>Vendor</dt><dd className="text-right font-semibold text-ink">{presetVendorName}</dd></>)}
               <dt>{svc('title')}</dt><dd className="text-right text-ink">{serviceNames}</dd>
               <dt>{t('name')}</dt><dd className="text-right text-ink">{form.name}</dd>
               <dt>{t('phone')}</dt><dd className="text-right text-ink">{form.phone}</dd>

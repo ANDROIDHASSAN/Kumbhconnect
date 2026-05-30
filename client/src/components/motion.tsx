@@ -1,4 +1,4 @@
-import { useRef, type ElementType, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ElementType, type ReactNode } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -9,29 +9,86 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 const isTouch = () => typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 
-// ── Reveal: fade/slide in on scroll (optionally staggering direct children) ──
+/**
+ * Reliable "in view" hook built on IntersectionObserver — with a hard
+ * fail-safe so content is NEVER left hidden. (The previous gsap.from +
+ * ScrollTrigger approach could leave elements stuck at opacity 0 when the
+ * trigger didn't fire under StrictMode / Lenis / route transitions.)
+ */
+function useInView(ref: React.RefObject<HTMLElement | null>, failSafeMs = 1300): boolean {
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    if (prefersReducedMotion() || typeof IntersectionObserver === 'undefined' || !ref.current) {
+      setShown(true);
+      return;
+    }
+    const el = ref.current;
+    let done = false;
+    const reveal = () => { if (!done) { done = true; setShown(true); io.disconnect(); clearTimeout(timer); } };
+    const io = new IntersectionObserver((entries) => { if (entries[0]?.isIntersecting) reveal(); }, { threshold: 0.05, rootMargin: '0px 0px -6% 0px' });
+    io.observe(el);
+    const timer = window.setTimeout(reveal, failSafeMs); // safety net
+    return () => { io.disconnect(); clearTimeout(timer); };
+  }, [ref]);
+  return shown;
+}
+
+// ── Reveal: fade/slide in on scroll (CSS-driven, fail-safe) ──
 export function Reveal({
-  children, as: Tag = 'div', className, y = 28, delay = 0, stagger, start = 'top 85%', once = true,
+  children, as: Tag = 'div', className, y = 28, delay = 0, stagger,
 }: {
   children: ReactNode; as?: ElementType; className?: string; y?: number; delay?: number; stagger?: number; start?: string; once?: boolean;
 }) {
   const ref = useRef<HTMLElement>(null);
-  useGSAP(() => {
-    if (prefersReducedMotion() || !ref.current) return;
-    const targets = stagger ? ref.current.children : ref.current;
-    gsap.from(targets as any, {
-      y, opacity: 0, duration: 0.9, delay, ease: 'power3.out', stagger: stagger || 0,
-      scrollTrigger: { trigger: ref.current, start, once },
-    });
-  }, { scope: ref });
-  return <Tag ref={ref} className={className}>{children}</Tag>;
+  const shown = useInView(ref);
+  const style = { '--rv-y': `${y}px`, '--rv-delay': `${delay}s` } as React.CSSProperties;
+  return (
+    <Tag ref={ref} style={style} className={cn(stagger ? 'reveal-stagger' : 'reveal', shown && 'is-in', className)}>
+      {children}
+    </Tag>
+  );
+}
+
+// ── SplitHeading: word-by-word mask reveal (CSS-driven, fail-safe) ──
+export function SplitHeading({
+  text, as: Tag = 'h2', className, trigger = 'scroll', delay = 0,
+}: {
+  text: string; as?: ElementType; className?: string; trigger?: 'scroll' | 'load'; delay?: number;
+}) {
+  const ref = useRef<HTMLElement>(null);
+  const shown = useInView(ref, trigger === 'load' ? 150 : 1300);
+  return (
+    <Tag ref={ref} className={cn('split', shown && 'is-in', className)}>
+      {text.split(' ').map((w, i) => (
+        <span key={i} className="split-word">
+          <span style={{ transitionDelay: `${delay + i * 0.05}s` }}>{w}&nbsp;</span>
+        </span>
+      ))}
+    </Tag>
+  );
+}
+
+// ── AnimatedNumber: counts up when scrolled into view (fail-safe) ──
+export function AnimatedNumber({ to, duration = 1.8, prefix = '', suffix = '', className }: { to: number; duration?: number; prefix?: string; suffix?: string; className?: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const shown = useInView(ref, 1500);
+  useEffect(() => {
+    if (!shown || !ref.current) return;
+    const el = ref.current;
+    const render = (v: number) => { el.textContent = `${prefix}${Math.round(v).toLocaleString('en-IN')}${suffix}`; };
+    if (prefersReducedMotion()) { render(to); return; }
+    const obj = { v: 0 };
+    const tween = gsap.to(obj, { v: to, duration, ease: 'power2.out', onUpdate: () => render(obj.v) });
+    return () => { tween.kill(); };
+  }, [shown, to, duration, prefix, suffix]);
+  return <span ref={ref} className={className}>{prefix}0{suffix}</span>;
 }
 
 // ── Parallax: scrub vertical drift while scrolling through viewport ──
 export function Parallax({ children, speed = -14, className }: { children: ReactNode; speed?: number; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   useGSAP(() => {
-    if (prefersReducedMotion() || !ref.current) return;
+    if (prefersReducedMotion() || isTouch() || !ref.current) return;
     gsap.to(ref.current, {
       yPercent: speed, ease: 'none',
       scrollTrigger: { trigger: ref.current, start: 'top bottom', end: 'bottom top', scrub: true },
@@ -72,46 +129,6 @@ export function TiltCard({ children, className, max = 7 }: { children: ReactNode
       {children}
     </div>
   );
-}
-
-// ── SplitHeading: word-by-word mask reveal ──
-export function SplitHeading({
-  text, as: Tag = 'h2', className, trigger = 'scroll', delay = 0,
-}: {
-  text: string; as?: ElementType; className?: string; trigger?: 'scroll' | 'load'; delay?: number;
-}) {
-  const ref = useRef<HTMLElement>(null);
-  useGSAP(() => {
-    if (prefersReducedMotion() || !ref.current) return;
-    const words = ref.current.querySelectorAll('[data-w]');
-    gsap.from(words, {
-      yPercent: 120, opacity: 0, duration: 1, ease: 'power4.out', stagger: 0.055, delay,
-      scrollTrigger: trigger === 'scroll' ? { trigger: ref.current, start: 'top 88%', once: true } : undefined,
-    });
-  }, { scope: ref });
-  return (
-    <Tag ref={ref} className={className}>
-      {text.split(' ').map((w, i) => (
-        <span key={i} className="inline-block overflow-hidden align-bottom">
-          <span data-w className="inline-block">{w}&nbsp;</span>
-        </span>
-      ))}
-    </Tag>
-  );
-}
-
-// ── AnimatedNumber: counts up when scrolled into view ──
-export function AnimatedNumber({ to, duration = 1.8, prefix = '', suffix = '', className }: { to: number; duration?: number; prefix?: string; suffix?: string; className?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  useGSAP(() => {
-    if (!ref.current) return;
-    const el = ref.current;
-    const obj = { v: 0 };
-    const render = () => { el.textContent = `${prefix}${Math.round(obj.v).toLocaleString('en-IN')}${suffix}`; };
-    if (prefersReducedMotion()) { obj.v = to; render(); return; }
-    gsap.to(obj, { v: to, duration, ease: 'power2.out', onUpdate: render, scrollTrigger: { trigger: el, start: 'top 92%', once: true } });
-  }, { scope: ref });
-  return <span ref={ref} className={className}>{prefix}0{suffix}</span>;
 }
 
 // ── Marquee: seamless infinite scroll (pauses on hover) ──
@@ -161,7 +178,7 @@ export function CustomCursor() {
     let active = false;
     const over = (e: MouseEvent) => {
       const interactive = !!(e.target as HTMLElement).closest('a,button,select,input,textarea,[role="button"]');
-      if (interactive === active) return; // only tween on state change
+      if (interactive === active) return;
       active = interactive;
       gsap.to(r, { scale: interactive ? 1.8 : 1, opacity: interactive ? 0.9 : 0.5, duration: 0.3 });
     };
